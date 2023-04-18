@@ -17,7 +17,7 @@
             </Text>
             <TextField fx:id="username" layoutX="23.0" layoutY="93.0" prefHeight="40.0" prefWidth="252.0" promptText="  Username" style="-fx-border-radius: 20 20 20 20; -fx-background-radius: 20 20 20 20; -fx-background-color: D9D9D9; -fx-font: black;" />
             <TextField fx:id="password" layoutX="23.0" layoutY="154.0" prefHeight="40.0" prefWidth="252.0" promptText="   Password" style="-fx-border-radius: 20 20 20 20; -fx-background-radius: 20 20 20 20; -fx-background-color: D9D9D9;" />
-            <Button fx:id="signUpbtn" layoutX="23.0" layoutY="272.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="252.0" style="-fx-background-color: EE9494; -fx-border-radius: 20 20 20 20; -fx-background-radius: 20 20 20 20;" text="Sign up" textFill="WHITE">
+            <Button fx:id="signUpbtn" layoutX="23.0" layoutY="272.0" mnemonicParsing="false" onAction="#SignUp" prefHeight="40.0" prefWidth="252.0" style="-fx-background-color: EE9494; -fx-border-radius: 20 20 20 20; -fx-background-radius: 20 20 20 20;" text="Sign up" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
