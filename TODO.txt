@@ -3,9 +3,9 @@ next, after user login link to Screen
 
 ### Admin Screen have functions: 
 1. Dashboard : total borrower total book total user
-2. List books : Can add remove delete update
-3. Manage user account : can remove and ban user
-4. View borrow : show all borrower(when user borrow need to create user information name gender id major ...)
-5. View overdue : show all due
+2. List books : Can add remove delete update view book details
+3. Add borrow : (when user borrow need to create user information name gender id major ...)
+4. View borrow : show all borrower
+5. View overdue : show all due user borrow book
 6. generate report : ....
 7. account : information, logout 
