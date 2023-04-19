@@ -2,7 +2,7 @@ package controllers;
 
 import java.io.IOException;
 
-import config.DatabaseConnection;
+import config.LoginAndSignUp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
@@ -20,13 +21,13 @@ import javafx.stage.Stage;
 public class SignUpController {
 
     @FXML
-    private TextField confirmPassword;
+    private PasswordField confirmPassword;
 
     @FXML
     private Text loginbtn;
 
     @FXML
-    private TextField password;
+    private PasswordField password;
 
     @FXML
     private Button signUpbtn;
@@ -45,7 +46,7 @@ public class SignUpController {
         window.show();
     }
     @FXML
-    void SignUp(ActionEvent event) {
+    void SignUp(ActionEvent event) throws IOException {
         String username = this.username.getText();
         String password = this.password.getText();
         String isActive = "1";
@@ -59,13 +60,28 @@ public class SignUpController {
         }
         else{
             if(confirmPassowrd.equals(password)){
-                DatabaseConnection db = new DatabaseConnection();
-                db.insertUser(username, password, isActive);
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Create Success");
-                alert.setHeaderText(null);
-                alert.setContentText("Create Success");
-                alert.showAndWait();
+                LoginAndSignUp db = new LoginAndSignUp();
+                if(db.insertUser(username, password, isActive)){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Create Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Create Success");
+                    alert.showAndWait();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/LoginPage.fxml"));
+                    Parent welcomeParent = loader.load();
+                    Scene welcomeScene = new Scene(welcomeParent);
+
+                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    window.setScene(welcomeScene);
+                    window.show();
+
+                }else{
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Fail insert");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Data already exists. Cannot insert!!");
+                    alert.showAndWait();
+                }
             }else{
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Error confirm password");
