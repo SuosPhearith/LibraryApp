@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BookController">
+   <children>
+      <Pane layoutX="9.0" layoutY="7.0" prefHeight="686.0" prefWidth="1063.0" style="-fx-background-radius: 12 12 12 12; -fx-background-color: grey;">
+         <children>
+            <Pane prefHeight="686.0" prefWidth="250.0" style="-fx-background-radius: 12 12 12 12; -fx-background-color: EE9494;">
+               <children>
+                  <TextField layoutX="15.0" layoutY="31.0" prefHeight="53.0" prefWidth="220.0" promptText="    Search book" style="-fx-background-radius: 15 15 15 15;">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="dashboardbtn" layoutX="36.0" layoutY="148.0" mnemonicParsing="false" onAction="#linkDashboard" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Dashboard" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="bookstbn" layoutX="36.0" layoutY="235.0" mnemonicParsing="false" onAction="#linkToBookPage" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Books">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="36.0" layoutY="321.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Borrow" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="36.0" layoutY="407.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Report" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font>
+                  </Button>
+                  <Text fx:id="logoutbtn" layoutX="22.0" layoutY="668.0" onMouseClicked="#handleLogout" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
+            <Circle fill="#4b4b4b" layoutX="916.0" layoutY="47.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
+            <Text layoutX="955.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Text>
+            <Line endX="633.0" endY="-8.599998474121094" layoutX="430.0" layoutY="103.0" startX="-180.0" startY="-8.599998474121094" />
+            <Pane layoutX="275.0" layoutY="165.0" prefHeight="483.0" prefWidth="301.0" style="-fx-background-color: #B0C4DE; -fx-background-radius: 20 20 20 20;">
+               <children>
+                  <Text fill="WHITE" layoutX="98.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Book info">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="idField" layoutX="11.0" layoutY="76.0" onMouseClicked="#autoGenerate" prefHeight="41.0" prefWidth="271.0" promptText="   Book ID" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #FFF8DC;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="titleField" layoutX="11.0" layoutY="130.0" prefHeight="41.0" prefWidth="271.0" promptText="   Book title" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #FFF8DC;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="authorField" layoutX="11.0" layoutY="183.0" prefHeight="41.0" prefWidth="271.0" promptText="   Author" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #FFF8DC;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="pageField" layoutX="15.0" layoutY="293.0" prefHeight="41.0" prefWidth="271.0" promptText="  Book page" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #FFF8DC;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="insertBtn" layoutX="15.0" layoutY="401.0" mnemonicParsing="false" onAction="#insertBook" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #1E90FF;" text="Insert">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="updateBtn" layoutX="109.0" layoutY="401.0" mnemonicParsing="false" onAction="#updateBook" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #DAA520;" text="Update">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="deleteBtn" layoutX="205.0" layoutY="401.0" mnemonicParsing="false" onAction="#deleteBook" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #B22222;" text="Delete">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="yearField" layoutX="12.0" layoutY="237.0" prefHeight="41.0" prefWidth="271.0" promptText="   Year" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #FFF8DC;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="clearBtn" layoutX="109.0" layoutY="342.0" mnemonicParsing="false" onAction="#clearData" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: grey;" text="Clear">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+                  <Text layoutX="50.0" layoutY="469.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Update and Delete by Book ID" />
+               </children>
+            </Pane>
+            <TableView fx:id="bookTable" layoutX="598.0" layoutY="165.0" onMouseClicked="#getItem" prefHeight="483.0" prefWidth="451.0" style="-fx-background-color: #AFEEEE;">
+               <columns>
+                  <TableColumn fx:id="idCol" prefWidth="88.79998779296875" text="ID" />
+                  <TableColumn fx:id="titleCol" prefWidth="79.20001220703125" text="Title" />
+                  <TableColumn fx:id="authorCol" prefWidth="97.60003662109375" text="Author" />
+                  <TableColumn fx:id="yearCol" prefWidth="92.800048828125" text="Year" />
+                  <TableColumn fx:id="pageCol" prefWidth="92.79998779296875" text="Page" />
+               </columns>
+            </TableView>
+            <Text fill="WHITE" layoutX="765.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Book table">
+               <font>
+                  <Font name="System Bold" size="23.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</Pane>

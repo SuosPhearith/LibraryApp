@@ -1,0 +1,12 @@
+Users: 
+    id: PK
+    username
+    password
+    isActive
+books:
+    id: PK
+    bookId
+    title
+    author
+    year
+    pages
