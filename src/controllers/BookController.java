@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -35,6 +36,18 @@ public class BookController implements Initializable {
 
     @FXML
     private TableColumn<Books, String> authorCol;
+
+    @FXML
+    private Button bookBtn;
+
+    @FXML
+    private Button categoryBtn;
+
+    @FXML
+    private ComboBox<Category> categoryCambo;
+
+    @FXML
+    private Button bookIssuesBtn;
 
     @FXML
     private TextField authorField;
@@ -56,6 +69,9 @@ public class BookController implements Initializable {
 
     @FXML
     private TableColumn<Books, String> idCol;
+
+    @FXML
+    private TableColumn<Books,String> categoryCol;
 
     @FXML
     private TextField idField;
@@ -86,6 +102,28 @@ public class BookController implements Initializable {
 
     @FXML
     private Button clearBtn;
+    
+    @FXML
+    void handleBookIssues(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BookIssuePage.fxml"));
+        Parent welcomeParent = loader.load();
+        Scene welcomeScene = new Scene(welcomeParent);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(welcomeScene);
+        window.show();
+    }
+
+    @FXML
+    void handleCategory(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/CategoryPage.fxml"));
+        Parent welcomeParent = loader.load();
+        Scene welcomeScene = new Scene(welcomeParent);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(welcomeScene);
+        window.show();
+    }
 
     @FXML
     void clearData(ActionEvent event) {
@@ -94,6 +132,8 @@ public class BookController implements Initializable {
         authorField.setText(null);
         yearField.setText(null);
         pageField.setText(null);
+        categoryCambo.getSelectionModel().getSelectedItem();
+        //System.out.println(categoryCambo.getSelectionModel().getSelectedItem());
     }
 
 
@@ -148,9 +188,10 @@ public class BookController implements Initializable {
         String author = authorField.getText();
         String year = yearField.getText();
         String page = pageField.getText();
+        String category = categoryCambo.getSelectionModel().getSelectedItem().toString();
         
         IsNullAndEmpty obj = new IsNullAndEmpty();
-        if(obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page)){
+        if(obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page) || obj.isNullAndEmpty(category) || obj.isNullAndEmpty(year)){
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Fail");
             alert.setHeaderText(null);
@@ -159,12 +200,13 @@ public class BookController implements Initializable {
             return ;
         }else{
             try (Connection conn = DatabaseConnector.getConnection()) {
-                String sqlInsert = "INSERT INTO `books`(`title`, `author`, `year`, `pages`) VALUES (?,?,?,?)";
+                String sqlInsert = "INSERT INTO `books`(`title`, `author`, `year`, `pages`, `category`) VALUES (?,?,?,?,?)";
                 PreparedStatement statement = conn.prepareStatement(sqlInsert);
                 statement.setString(1, title);
                 statement.setString(2, author);
                 statement.setString(3, year);
                 statement.setString(4, page);
+                statement.setString(5, category);
 
                 int rowsInserted = statement.executeUpdate();
                 if(rowsInserted>0){
@@ -210,6 +252,7 @@ public class BookController implements Initializable {
         authorField.setText(authorCol.getCellData(index).toString());
         yearField.setText(yearCol.getCellData(index).toString());
         pageField.setText(pageCol.getCellData(index).toString());
+        //categoryCambo.getSelectionModel().getSelectedIndex();
         
     }
 
@@ -222,10 +265,11 @@ public class BookController implements Initializable {
         String author = authorField.getText();
         String year = yearField.getText();
         String page = pageField.getText();
+        String category = categoryCambo.getSelectionModel().getSelectedItem().toString();
         boolean con = true; 
         
         IsNullAndEmpty obj = new IsNullAndEmpty();
-        if(obj.isNullAndEmpty(bookId) || obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page) || obj.isNullAndEmpty(year)){
+        if(obj.isNullAndEmpty(bookId) || obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page) || obj.isNullAndEmpty(year) || obj.isNullAndEmpty(category)){
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Fail");
             alert.setHeaderText(null);
@@ -240,13 +284,14 @@ public class BookController implements Initializable {
                 id = Integer.parseInt(bookId);
                 while(rs.next()){
                     if(rs.getInt("bookid") == id){
-                        String sqlInsert = "UPDATE books SET title= ? ,author= ? ,year= ?,pages= ? WHERE bookId= ? ";
+                        String sqlInsert = "UPDATE books SET title= ? ,author= ? ,year= ?,pages= ?, category = ? WHERE bookId= ? ";
                         PreparedStatement statement2 = conn.prepareStatement(sqlInsert);
                         statement2.setString(1, title);
                         statement2.setString(2, author);
                         statement2.setString(3, year);
                         statement2.setString(4, page);
-                        statement2.setInt(5, id);
+                        statement2.setString(5, category);
+                        statement2.setInt(6, id);
 
                         statement2.executeUpdate();
 
@@ -327,6 +372,8 @@ public class BookController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             showBooks();
+            getCategoryList();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -341,7 +388,7 @@ public class BookController implements Initializable {
             ResultSet resultSet = statement.executeQuery();
             Books books;
             while(resultSet.next()){
-                books = new Books(resultSet.getString("bookId"), resultSet.getString("title"), resultSet.getString("author"), resultSet.getString("year"), resultSet.getString("pages"));
+                books = new Books(resultSet.getString("bookId"), resultSet.getString("title"), resultSet.getString("author"), resultSet.getString("year"), resultSet.getString("pages"), resultSet.getString("category"));
                 bookList.add(books);
             }
         } catch (Exception e) {
@@ -357,7 +404,28 @@ public class BookController implements Initializable {
         authorCol.setCellValueFactory(new PropertyValueFactory<Books, String>("author"));
         yearCol.setCellValueFactory(new PropertyValueFactory<Books, String>("year"));
         pageCol.setCellValueFactory(new PropertyValueFactory<Books,String>("pages"));
+        categoryCol.setCellValueFactory(new PropertyValueFactory<Books,String>("category"));
         bookTable.setItems(list);
+    }
+    public ObservableList<Category> getCategoryList() throws SQLException{
+        ObservableList<Category> categoryList = FXCollections.observableArrayList();
+        try {
+            Connection conn = DatabaseConnector.getConnection();
+            String sql = "SELECT * FROM category";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            Category category;
+            while(resultSet.next()){
+                category = new Category(resultSet.getString("catName"));
+                categoryList.add(category);
+            }
+            categoryCambo.setItems(categoryList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //System.out.println(categoryList);
+        return categoryList;
+
     }
 
 

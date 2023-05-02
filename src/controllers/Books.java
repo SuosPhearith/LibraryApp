@@ -6,12 +6,20 @@ public class Books {
     private String author;
     private String year;
     private String pages;
-    public Books(String bookId, String title, String author, String year, String pages) {
+    private String category;
+    public Books(String bookId, String title, String author, String year, String pages, String category) {
         this.bookId = bookId;
         this.title = title;
         this.author = author;
         this.year = year;
         this.pages = pages;
+        this.category = category;
+    }
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
     }
     public String getBookId() {
         return bookId;
