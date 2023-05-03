@@ -17,7 +17,7 @@
          <children>
             <Pane prefHeight="686.0" prefWidth="250.0" style="-fx-background-radius: 12 12 12 12; -fx-background-color: EE9494;">
                <children>
-                  <TextField layoutX="15.0" layoutY="31.0" prefHeight="53.0" prefWidth="220.0" promptText="    Search book" style="-fx-background-radius: 15 15 15 15;">
+                  <TextField fx:id="searchField" layoutX="15.0" layoutY="31.0" prefHeight="41.0" prefWidth="141.0" promptText="Search category" style="-fx-background-radius: 15 15 15 15;">
                      <font>
                         <Font size="17.0" />
                      </font>
@@ -47,6 +47,11 @@
                         <Font size="23.0" />
                      </font>
                   </Text>
+                  <Button fx:id="searchBtn" layoutX="161.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #1E90FF;" text="Search">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
                </children>
             </Pane>
             <Circle fill="#4b4b4b" layoutX="916.0" layoutY="47.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
@@ -94,7 +99,7 @@
                      </font>
                   </Button>
                   <Text layoutX="44.0" layoutY="469.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Update and Delete by category ID" />
-                  <TextArea layoutX="11.0" layoutY="186.0" prefHeight="142.0" prefWidth="271.0" promptText="   Category information" style="-fx-background-color: #FFF8DC;">
+                  <TextArea fx:id="infoField" layoutX="11.0" layoutY="186.0" prefHeight="142.0" prefWidth="271.0" promptText="   Category information" style="-fx-background-color: #FFF8DC;">
                      <font>
                         <Font size="16.0" />
                      </font>

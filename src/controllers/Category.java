@@ -1,8 +1,23 @@
 package controllers;
 
 public class Category {
+    private String categoryId;
     private String catName;
+    public Category(String catName) {
+        this.catName = catName;
+    }
     private String catInfo;
+    public Category(String categoryId, String catName, String catInfo) {
+        this.categoryId = categoryId;
+        this.catName = catName;
+        this.catInfo = catInfo;
+    }
+    public String getCategoryId() {
+        return categoryId;
+    }
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
     public String getCatName() {
         return catName;
     }
@@ -14,9 +29,6 @@ public class Category {
     }
     public void setCatInfo(String catInfo) {
         this.catInfo = catInfo;
-    }
-    public Category(String catName) {
-        this.catName = catName;
     }
     @Override
     public String toString(){

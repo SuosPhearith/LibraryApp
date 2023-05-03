@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-
 import config.DatabaseConnector;
 import docs.IsNullAndEmpty;
 import javafx.collections.FXCollections;
@@ -71,7 +70,7 @@ public class BookController implements Initializable {
     private TableColumn<Books, String> idCol;
 
     @FXML
-    private TableColumn<Books,String> categoryCol;
+    private TableColumn<Books, String> categoryCol;
 
     @FXML
     private TextField idField;
@@ -102,7 +101,13 @@ public class BookController implements Initializable {
 
     @FXML
     private Button clearBtn;
-    
+
+    @FXML
+    private Button searchBtn;
+
+    @FXML
+    private TextField searchField;
+
     @FXML
     void handleBookIssues(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BookIssuePage.fxml"));
@@ -132,10 +137,8 @@ public class BookController implements Initializable {
         authorField.setText(null);
         yearField.setText(null);
         pageField.setText(null);
-        categoryCambo.getSelectionModel().getSelectedItem();
-        //System.out.println(categoryCambo.getSelectionModel().getSelectedItem());
+        categoryCambo.setPromptText("select");
     }
-
 
     @FXML
     void handleLogout(MouseEvent event) throws IOException {
@@ -148,7 +151,6 @@ public class BookController implements Initializable {
         window.setScene(welcomeScene);
         window.show();
     }
-
 
     @FXML
     void linkDashboard(ActionEvent event) throws IOException {
@@ -169,12 +171,12 @@ public class BookController implements Initializable {
 
     @FXML
     void autoGenerate(MouseEvent event) throws SQLException {
-        int id=0;
+        int id = 0;
         Connection conn = DatabaseConnector.getConnection();
         String sql = "SELECT * FROM books";
         PreparedStatement statement = conn.prepareStatement(sql);
         ResultSet rs = statement.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             id = rs.getInt("bookId") + 1;
         }
         String convert = Integer.toString(id);
@@ -183,22 +185,23 @@ public class BookController implements Initializable {
 
     @FXML
     void insertBook(ActionEvent event) {
-        //String bookId = idField.getText();
+        // String bookId = idField.getText();
         String title = titleField.getText();
         String author = authorField.getText();
         String year = yearField.getText();
         String page = pageField.getText();
         String category = categoryCambo.getSelectionModel().getSelectedItem().toString();
-        
+
         IsNullAndEmpty obj = new IsNullAndEmpty();
-        if(obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page) || obj.isNullAndEmpty(category) || obj.isNullAndEmpty(year)){
+        if (obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page)
+                || obj.isNullAndEmpty(category) || obj.isNullAndEmpty(year)) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Fail");
             alert.setHeaderText(null);
             alert.setContentText("Please input all fields!!");
             alert.showAndWait();
-            return ;
-        }else{
+            return;
+        } else {
             try (Connection conn = DatabaseConnector.getConnection()) {
                 String sqlInsert = "INSERT INTO `books`(`title`, `author`, `year`, `pages`, `category`) VALUES (?,?,?,?,?)";
                 PreparedStatement statement = conn.prepareStatement(sqlInsert);
@@ -209,27 +212,28 @@ public class BookController implements Initializable {
                 statement.setString(5, category);
 
                 int rowsInserted = statement.executeUpdate();
-                if(rowsInserted>0){
+                if (rowsInserted > 0) {
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Success");
                     alert.setHeaderText(null);
                     alert.setContentText("Insert success.");
                     alert.showAndWait();
-                    idField.setText(null);
-                    titleField.setText(null);
-                    authorField.setText(null);
-                    yearField.setText(null);
-                    pageField.setText(null);
+                    // idField.setText(null);
+                    // titleField.setText(null);
+                    // authorField.setText(null);
+                    // yearField.setText(null);
+                    // pageField.setText(null);
+                    clearData(event);
 
                     showBooks();
-                }else{
+                } else {
                     Alert alert = new Alert(AlertType.WARNING);
                     alert.setTitle("Fail");
                     alert.setHeaderText(null);
                     alert.setContentText("Fail insert!!");
                     alert.showAndWait();
                 }
-    
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(AlertType.WARNING);
@@ -238,13 +242,13 @@ public class BookController implements Initializable {
                 alert.setContentText("Fail insert!!");
                 alert.showAndWait();
             }
-        } 
+        }
     }
 
     @FXML
-    void getItem(MouseEvent event) {
+    void getItem(MouseEvent event) throws SQLException {
         Integer index = bookTable.getSelectionModel().getSelectedIndex();
-        if(index <= -1){
+        if (index <= -1) {
             return;
         }
         idField.setText(idCol.getCellData(index).toString());
@@ -252,38 +256,48 @@ public class BookController implements Initializable {
         authorField.setText(authorCol.getCellData(index).toString());
         yearField.setText(yearCol.getCellData(index).toString());
         pageField.setText(pageCol.getCellData(index).toString());
-        //categoryCambo.getSelectionModel().getSelectedIndex();
-        
+        int catSize = getCategoryList().size();
+        String compare = categoryCol.getCellData(index).toString();
+        categoryCambo.setPromptText(compare);
+        for (int i = 0; i < catSize; i++) {
+            if (categoryCambo.getItems().get(i).toString().equals(compare)) {
+                categoryCambo.getItems().get(i);
+                categoryCambo.setValue(categoryCambo.getItems().get(i));
+                // System.out.println(categoryCambo.getItems().get(i));
+            }
+        }
+
     }
 
     @FXML
     void updateBook(ActionEvent event) {
         String bookId = idField.getText();
         int id;
-        //System.out.println("kdkeicdlfjkwwwwwwwwwwwwww");
+        // System.out.println("kdkeicdlfjkwwwwwwwwwwwwww");
         String title = titleField.getText();
         String author = authorField.getText();
         String year = yearField.getText();
         String page = pageField.getText();
         String category = categoryCambo.getSelectionModel().getSelectedItem().toString();
-        boolean con = true; 
-        
+        boolean con = true;
+
         IsNullAndEmpty obj = new IsNullAndEmpty();
-        if(obj.isNullAndEmpty(bookId) || obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page) || obj.isNullAndEmpty(year) || obj.isNullAndEmpty(category)){
+        if (obj.isNullAndEmpty(bookId) || obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author)
+                || obj.isNullAndEmpty(page) || obj.isNullAndEmpty(year) || obj.isNullAndEmpty(category)) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Fail");
             alert.setHeaderText(null);
             alert.setContentText("Please input all fields!!");
             alert.showAndWait();
-            return ;
-        }else{
+            return;
+        } else {
             try (Connection conn = DatabaseConnector.getConnection()) {
                 String sqlSelect = "SELECT * FROM books";
                 PreparedStatement statement = conn.prepareStatement(sqlSelect);
                 ResultSet rs = statement.executeQuery();
                 id = Integer.parseInt(bookId);
-                while(rs.next()){
-                    if(rs.getInt("bookid") == id){
+                while (rs.next()) {
+                    if (rs.getInt("bookid") == id) {
                         String sqlInsert = "UPDATE books SET title= ? ,author= ? ,year= ?,pages= ?, category = ? WHERE bookId= ? ";
                         PreparedStatement statement2 = conn.prepareStatement(sqlInsert);
                         statement2.setString(1, title);
@@ -301,7 +315,7 @@ public class BookController implements Initializable {
                         alert.setContentText("Update success.");
                         alert.showAndWait();
                         con = false;
-                        
+
                         idField.setText(null);
                         titleField.setText(null);
                         authorField.setText(null);
@@ -310,14 +324,14 @@ public class BookController implements Initializable {
                         showBooks();
                     }
                 }
-                if(con){
+                if (con) {
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);
                     alert.setContentText("ID not Found!");
                     alert.showAndWait();
                 }
-    
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(AlertType.WARNING);
@@ -327,7 +341,7 @@ public class BookController implements Initializable {
                 alert.showAndWait();
             }
 
-        } 
+        }
     }
 
     @FXML
@@ -340,13 +354,13 @@ public class BookController implements Initializable {
             statement.setInt(1, id);
             int rowsDeleted = statement.executeUpdate();
             if (rowsDeleted > 0) {
-                //System.out.println("Record deleted successfully.");
+                // System.out.println("Record deleted successfully.");
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
                 alert.setContentText("Record deleted successfully.");
                 alert.showAndWait();
-                
+
                 idField.setText(null);
                 titleField.setText(null);
                 authorField.setText(null);
@@ -354,7 +368,7 @@ public class BookController implements Initializable {
                 pageField.setText(null);
                 showBooks();
             } else {
-                //System.out.println("Record not found.");
+                // System.out.println("Record not found.");
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Fail");
                 alert.setHeaderText(null);
@@ -367,7 +381,6 @@ public class BookController implements Initializable {
         }
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -379,16 +392,24 @@ public class BookController implements Initializable {
         }
     }
 
-    public ObservableList<Books> getBooksList() throws SQLException{
+    public ObservableList<Books> getBooksList() throws SQLException {
         ObservableList<Books> bookList = FXCollections.observableArrayList();
         try {
             Connection conn = DatabaseConnector.getConnection();
             String sql = "SELECT * FROM books";
+            // Search Function
+            String search = searchField.getText();
+            if(search!=""){
+                sql += " WHERE title LIKE '%" +search+ "%'";
+            }
+            
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             Books books;
-            while(resultSet.next()){
-                books = new Books(resultSet.getString("bookId"), resultSet.getString("title"), resultSet.getString("author"), resultSet.getString("year"), resultSet.getString("pages"), resultSet.getString("category"));
+            while (resultSet.next()) {
+                books = new Books(resultSet.getString("bookId"), resultSet.getString("title"),
+                        resultSet.getString("author"), resultSet.getString("year"), resultSet.getString("pages"),
+                        resultSet.getString("category"));
                 bookList.add(books);
             }
         } catch (Exception e) {
@@ -397,17 +418,19 @@ public class BookController implements Initializable {
         return bookList;
 
     }
-    public void showBooks() throws SQLException{
+
+    public void showBooks() throws SQLException {
         ObservableList<Books> list = getBooksList();
         idCol.setCellValueFactory(new PropertyValueFactory<Books, String>("bookId"));
         titleCol.setCellValueFactory(new PropertyValueFactory<Books, String>("title"));
         authorCol.setCellValueFactory(new PropertyValueFactory<Books, String>("author"));
         yearCol.setCellValueFactory(new PropertyValueFactory<Books, String>("year"));
-        pageCol.setCellValueFactory(new PropertyValueFactory<Books,String>("pages"));
-        categoryCol.setCellValueFactory(new PropertyValueFactory<Books,String>("category"));
+        pageCol.setCellValueFactory(new PropertyValueFactory<Books, String>("pages"));
+        categoryCol.setCellValueFactory(new PropertyValueFactory<Books, String>("category"));
         bookTable.setItems(list);
     }
-    public ObservableList<Category> getCategoryList() throws SQLException{
+
+    public ObservableList<Category> getCategoryList() throws SQLException {
         ObservableList<Category> categoryList = FXCollections.observableArrayList();
         try {
             Connection conn = DatabaseConnector.getConnection();
@@ -415,7 +438,7 @@ public class BookController implements Initializable {
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             Category category;
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 category = new Category(resultSet.getString("catName"));
                 categoryList.add(category);
             }
@@ -423,10 +446,14 @@ public class BookController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //System.out.println(categoryList);
+        // System.out.println(categoryList);
         return categoryList;
 
     }
-
+    
+    @FXML
+    void handleSearch(ActionEvent event) throws SQLException {
+        showBooks();
+    }
 
 }

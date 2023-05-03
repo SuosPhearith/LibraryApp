@@ -11,7 +11,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/pages/BookPage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/pages/BookIssuePage.fxml"));
         stage.setTitle("Welcome to Library App");
         stage.setScene(new Scene(root));
         stage.show();
