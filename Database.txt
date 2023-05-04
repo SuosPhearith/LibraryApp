@@ -10,3 +10,13 @@ books:
     author
     year
     pages
+borrow
+    borrowId : PK
+    name
+    schoolId
+    tel
+    borrowDate
+    returnDate
+    book : ID
+    isReturn
+
