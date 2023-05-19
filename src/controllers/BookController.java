@@ -155,7 +155,7 @@ public class BookController implements Initializable {
     @FXML
     void linkDashboard(ActionEvent event) throws IOException {
         // link dashboard
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/ScreenPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/DashboardPage.fxml"));
         Parent welcomeParent = loader.load();
         Scene welcomeScene = new Scene(welcomeParent);
 
@@ -165,8 +165,14 @@ public class BookController implements Initializable {
     }
 
     @FXML
-    void linkToBookPage(ActionEvent event) {
+    void linkToBookPage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BookPage.fxml"));
+        Parent welcomeParent = loader.load();
+        Scene welcomeScene = new Scene(welcomeParent);
 
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(welcomeScene);
+        window.show();
     }
 
     @FXML
@@ -448,12 +454,23 @@ public class BookController implements Initializable {
         }
         // System.out.println(categoryList);
         return categoryList;
-
     }
     
     @FXML
     void handleSearch(ActionEvent event) throws SQLException {
         showBooks();
+    }
+    @FXML
+    private Button borrowBtn;
+    @FXML
+    void handleBorrow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowPage.fxml"));
+        Parent welcomeParent = loader.load();
+        Scene welcomeScene = new Scene(welcomeParent);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(welcomeScene);
+        window.show();
     }
 
 }

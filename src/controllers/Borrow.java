@@ -8,6 +8,24 @@ public class Borrow {
     private String borrowDate;
     private String returnDate;
     private String book;
+    private String isReturn;
+    public String getIsReturn() {
+        return isReturn;
+    }
+    public void setIsReturn(String isReturn) {
+        this.isReturn = isReturn;
+    }
+    public Borrow(String borrowId, String name, String schoolId, String tel, String borrowDate, String returnDate,
+            String book, String isReturn) {
+        this.borrowId = borrowId;
+        this.name = name;
+        this.schoolId = schoolId;
+        this.tel = tel;
+        this.borrowDate = borrowDate;
+        this.returnDate = returnDate;
+        this.book = book;
+        this.isReturn = isReturn;
+    }
     public Borrow(String borrowId, String name, String schoolId, String tel, String borrowDate, String returnDate,
             String book) {
         this.borrowId = borrowId;

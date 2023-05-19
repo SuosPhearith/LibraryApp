@@ -32,7 +32,7 @@
                         <Font name="System Bold" size="19.0" />
                      </font>
                   </Button>
-                  <Button layoutX="36.0" layoutY="321.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Borrow" textFill="WHITE">
+                  <Button fx:id="borrowBtn" layoutX="36.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleBorrow" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Borrow" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="19.0" />
                      </font>

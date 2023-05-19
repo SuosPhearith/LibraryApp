@@ -3,6 +3,13 @@ package controllers;
 public class Books {
     private String bookId;
     private String title;
+    public Books(String bookId, String title) {
+        this.bookId = bookId;
+        this.title = title;
+    }
+    public Books(String title) {
+        this.title = title;
+    }
     private String author;
     private String year;
     private String pages;
@@ -50,6 +57,11 @@ public class Books {
     }
     public void setPages(String pages) {
         this.pages = pages;
+    }
+    @Override
+    public String toString(){
+        return bookId + "-"+ title;
+        
     }
     
     

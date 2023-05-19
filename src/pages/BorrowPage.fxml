@@ -23,7 +23,7 @@
                         <Font size="17.0" />
                      </font>
                   </TextField>
-                  <Button layoutX="36.0" layoutY="148.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Dashboard" textFill="WHITE">
+                  <Button fx:id="dashboardBtn" layoutX="36.0" layoutY="148.0" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Dashboard" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="19.0" />
                      </font>
@@ -62,7 +62,7 @@
                </font>
             </Text>
             <Line endX="633.0" endY="-8.599998474121094" layoutX="430.0" layoutY="103.0" startX="-180.0" startY="-8.599998474121094" />
-            <TableView fx:id="tableView" layoutX="573.0" layoutY="129.0" prefHeight="523.0" prefWidth="479.0">
+            <TableView fx:id="tableView" layoutX="573.0" layoutY="129.0" onMouseClicked="#getItem" prefHeight="523.0" prefWidth="479.0">
               <columns>
                 <TableColumn fx:id="idCol" prefWidth="32.0" text="ID" />
                 <TableColumn fx:id="nameCol" prefWidth="75.20001220703125" text="Name" />
@@ -79,6 +79,11 @@
                </font>
             </Button>
             <Button fx:id="insertBtn21" layoutX="424.0" layoutY="28.0" mnemonicParsing="false" onAction="#insertBook" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #1E90FF;" text="Return" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="borrowingBtn" layoutX="539.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleBorrowing" prefHeight="41.0" prefWidth="119.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #1E90FF;" text="Borrowing" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
