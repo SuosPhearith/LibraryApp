@@ -244,8 +244,8 @@ public class ReturnController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<String> list = FXCollections.observableArrayList("Return","NoReturn");
-            selectCombo.setItems(list);
+        ObservableList<String> list = FXCollections.observableArrayList("Return", "NoReturn");
+        selectCombo.setItems(list);
         try {
             showBorrows();
             getBooksList();
@@ -253,6 +253,7 @@ public class ReturnController implements Initializable {
             e.printStackTrace();
         }
     }
+
     public ObservableList<Borrow> getBooksList() throws SQLException {
         ObservableList<Borrow> borrowList = FXCollections.observableArrayList();
         try {
@@ -270,7 +271,8 @@ public class ReturnController implements Initializable {
             while (resultSet.next()) {
                 borrows = new Borrow(resultSet.getString("borrowId"), resultSet.getString("name"),
                         resultSet.getString("schoolId"), resultSet.getString("tel"), resultSet.getString("borrowDate"),
-                        resultSet.getString("returnDate"), resultSet.getString("book"),resultSet.getString("isReturn"));
+                        resultSet.getString("returnDate"), resultSet.getString("book"),
+                        resultSet.getString("isReturn"));
                 borrowList.add(borrows);
             }
         } catch (Exception e) {
@@ -279,6 +281,7 @@ public class ReturnController implements Initializable {
         return borrowList;
 
     }
+
     public void showBorrows() throws SQLException {
         ObservableList<Borrow> list = getBooksList();
         idCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowId"));
@@ -290,7 +293,7 @@ public class ReturnController implements Initializable {
         bookCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("book"));
         isReturnCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("isReturn"));
         tableView.setItems(list);
-    }
 
+    }
 
 }
