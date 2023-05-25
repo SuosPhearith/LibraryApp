@@ -451,18 +451,6 @@ public class BorrowController implements Initializable {
         nameField.setText(nameCol.getCellData(index).toString());
         schoolIdField.setText(schoolIdCol.getCellData(index).toString());
         yearField.setText(telCol.getCellData(index).toString());
-        // borrowDateField.setValue(borrowDateCol.getCellData(index));
-        // returnDateField.setVaule(returnDateCol.getCellData(index));
-        // bookCol.setText(bookCol.getCellData(index).toString());
-        // int catSize = getBooksList().size()-2;
-        // String compare = bookCol.getCellData(index).toString();
-        // borrowCombo.setPromptText(compare);
-        // for (int i = 0; i < catSize; i++) {
-        // if (borrowCombo.getItems().get(i).toString().equals(compare)) {
-        // borrowCombo.getItems().get(i);
-        // borrowCombo.setValue(borrowCombo.getItems().get(i));
-        // // System.out.println(categoryCambo.getItems().get(i));
-        // }
     }
     @FXML
     private Button dashboardBtn;
