@@ -5,11 +5,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BorrowingController">
    <children>
@@ -37,11 +35,6 @@
                         <Font name="System Bold" size="19.0" />
                      </font>
                   </Button>
-                  <Button layoutX="36.0" layoutY="407.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Report" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="19.0" />
-                     </font>
-                  </Button>
                   <Text fx:id="logoutbtn" layoutX="22.0" layoutY="668.0" onMouseClicked="#logout" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
                      <font>
                         <Font size="23.0" />
@@ -54,12 +47,6 @@
                   </Button>
                </children>
             </Pane>
-            <Circle fill="#4b4b4b" layoutX="916.0" layoutY="47.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
-            <Text layoutX="955.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Text>
             <Line endX="633.0" endY="-8.599998474121094" layoutX="430.0" layoutY="103.0" startX="-180.0" startY="-8.599998474121094" />
             <TableView fx:id="tableView" layoutX="271.0" layoutY="113.0" onMouseClicked="#getItem" prefHeight="539.0" prefWidth="781.0">
                <columns>

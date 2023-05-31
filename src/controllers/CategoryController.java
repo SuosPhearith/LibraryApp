@@ -270,6 +270,17 @@ public class CategoryController implements Initializable {
     }
 
     @FXML
+    void handleBorrow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowPage.fxml"));
+        Parent welcomeParent = loader.load();
+        Scene welcomeScene = new Scene(welcomeParent);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(welcomeScene);
+        window.show();
+    }
+
+    @FXML
     void updateBook(ActionEvent event) {
         String categoryId = idField.getText();
         int id;
