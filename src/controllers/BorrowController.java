@@ -425,7 +425,7 @@ public class BorrowController implements Initializable {
         ObservableList<Books> bookList = FXCollections.observableArrayList();
         try {
             Connection conn = DatabaseConnector.getConnection();
-            String sql = "SELECT * FROM books";
+            String sql = "SELECT * FROM books WHERE isActive = 'Active'";
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             Books books;
