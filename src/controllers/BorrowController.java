@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import config.DatabaseConnector;
@@ -31,11 +32,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.sql.Statement;
 
 public class BorrowController implements Initializable {
-
-    @FXML
-    private TableColumn<Borrow, String> bookCol;
 
     @FXML
     private Button bookstbn;
@@ -113,6 +112,18 @@ public class BorrowController implements Initializable {
     private TableColumn<Borrow, String> telCol;
 
     @FXML
+    private Button addBtn;
+
+    @FXML
+    private TableColumn<Cart, String> bookIdCol;
+
+    @FXML
+    private TableColumn<Cart, String> bookNameCol;
+
+    @FXML
+    private TableView<Cart> tableBook;
+
+    @FXML
     void handleBorrowing(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowingPage.fxml"));
         Parent welcomeParent = loader.load();
@@ -146,6 +157,7 @@ public class BorrowController implements Initializable {
         borrowDateField.setValue(null);
         returnDateField.setValue(null);
         borrowCombo.setValue(null);
+        carts.clear();
 
     }
 
@@ -205,6 +217,41 @@ public class BorrowController implements Initializable {
         window.show();
     }
 
+    public ArrayList<Cart> carts = new ArrayList<>();
+
+    @FXML
+    void handleAdd(ActionEvent event) throws SQLException {
+        var selectedItem = borrowCombo.getSelectionModel().getSelectedItem();
+        String bookId = "";
+        String bookName = "";
+
+        if (selectedItem != null && !selectedItem.toString().isEmpty()) {
+            var selectedString = selectedItem.toString();
+            bookId = selectedString.substring(0, selectedString.indexOf("-"));
+            bookName = selectedString.substring(selectedString.indexOf("-") + 1);
+        } else {
+            return;
+        }
+
+        if (carts.size() > 4) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Fail");
+            alert.setHeaderText(null);
+            alert.setContentText("Can borrow only 5 books!");
+            alert.showAndWait();
+            return;
+        }
+
+        carts.add(new Cart(bookId, bookName));
+
+        ObservableList<Cart> bookList = FXCollections.observableArrayList(carts);
+        bookIdCol.setCellValueFactory(new PropertyValueFactory<>("bookId"));
+        bookNameCol.setCellValueFactory(new PropertyValueFactory<>("bookName"));
+
+        tableBook.setItems(bookList);
+
+    }
+
     @FXML
     void insertBorrow(ActionEvent event) {
         String name = nameField.getText();
@@ -212,11 +259,35 @@ public class BorrowController implements Initializable {
         String tel = yearField.getText();
         String borrowDate = borrowDateField.getValue().toString();
         String returnDate = returnDateField.getValue().toString();
-        String book = borrowCombo.getSelectionModel().getSelectedItem().toString();
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
+        if (obj.isNullAndEmpty(schoolId)) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Fail");
+            alert.setHeaderText(null);
+            alert.setContentText("Please input all fields!!");
+            alert.showAndWait();
+            return;
+        }
+        try (Connection con = DatabaseConnector.getConnection()) {
+            String insertInsert = "SELECT `schoolId` FROM `borrow` WHERE schoolId = ? AND isReturn = 'NoReturn'";
+            PreparedStatement stm = con.prepareStatement(insertInsert);
+            stm.setString(1, schoolId);
+            ResultSet resultSet = stm.executeQuery();
+            if (resultSet.next()) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Fail");
+                alert.setHeaderText(null);
+                alert.setContentText("ID not allowed to borrow!!");
+                alert.showAndWait();
+                return;
+            }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+
         if (obj.isNullAndEmpty(name) || obj.isNullAndEmpty(schoolId) || obj.isNullAndEmpty(borrowDate)
-                || obj.isNullAndEmpty(returnDate) || obj.isNullAndEmpty(tel) || obj.isNullAndEmpty(book)) {
+                || obj.isNullAndEmpty(returnDate) || obj.isNullAndEmpty(tel)) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Fail");
             alert.setHeaderText(null);
@@ -224,49 +295,54 @@ public class BorrowController implements Initializable {
             alert.showAndWait();
             return;
         } else {
-            try (Connection conn = DatabaseConnector.getConnection()) {
-                String sqlInsert = "INSERT INTO `borrow`(`name`, `schoolId`, `tel`, `borrowDate`, `returnDate`, `book`) VALUES (?,?,?,?,?,?)";
-                PreparedStatement statement = conn.prepareStatement(sqlInsert);
+            try {
+                Connection conn = DatabaseConnector.getConnection();
+                String sql = "INSERT INTO `borrow`(`name`, `schoolId`, `tel`, `borrowDate`, `returnDate`, `isReturn`) VALUES (?,?,?,?,?,?)";
+                PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 statement.setString(1, name);
                 statement.setString(2, schoolId);
                 statement.setString(3, tel);
                 statement.setString(4, borrowDate);
                 statement.setString(5, returnDate);
-                statement.setString(6, book);
-
+                statement.setString(6, "NoReturn");
                 int rowsInserted = statement.executeUpdate();
+
                 if (rowsInserted > 0) {
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Success");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Insert success.");
-                    alert.showAndWait();
-                    borrowIdField.setText(null);
-                    nameField.setText(null);
-                    schoolIdField.setText(null);
-                    yearField.setText(null);
-                    borrowDateField.setValue(null);
-                    returnDateField.setValue(null);
-                    borrowCombo.setValue(null);
-
-                    showBorrows();
-
-                } else {
-                    Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle("Fail");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Fail insert!!");
-                    alert.showAndWait();
+                    ResultSet generatedKeys = statement.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        int lastInsertId = generatedKeys.getInt(1);
+                        StringBuilder sql2 = new StringBuilder(
+                                "INSERT INTO `borrowbook`(`borrowId`, `bookId`) VALUES ");
+                        for (Cart cart : carts) {
+                            sql2.append("('").append(lastInsertId).append("','").append(cart.getBookId()).append("'),");
+                        }
+                        String sql3 = sql2.substring(0, sql2.length() - 1);
+                        PreparedStatement statement2 = conn.prepareStatement(sql3);
+                        int insert = statement2.executeUpdate();
+                        if (insert > 0) {
+                            Alert alert = new Alert(AlertType.INFORMATION);
+                            alert.setTitle("Insert Success");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Insert borrow Success!!");
+                            alert.showAndWait();
+                            showBorrows();
+                            clearData(event);
+                            tableBook.setItems(null);
+                            return;
+                        } else {
+                            Alert alert = new Alert(AlertType.WARNING);
+                            alert.setTitle("Insert Fail");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Insert borrow Fail!!");
+                            alert.showAndWait();
+                        }
+                    }
                 }
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Fail");
-                alert.setHeaderText(null);
-                alert.setContentText("Fail insert!!");
-                alert.showAndWait();
             }
+
         }
     }
 
@@ -295,18 +371,15 @@ public class BorrowController implements Initializable {
     @FXML
     void updateBorrow(ActionEvent event) {
         String borrowId = borrowIdField.getText();
-        int id;
         String name = nameField.getText();
         String schoolId = schoolIdField.getText();
         String tel = yearField.getText();
         String borrowDate = borrowDateField.getValue().toString();
         String returnDate = returnDateField.getValue().toString();
-        String book = borrowCombo.getSelectionModel().getSelectedItem().toString();
-        boolean con = true;
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
         if (obj.isNullAndEmpty(name) || obj.isNullAndEmpty(schoolId) || obj.isNullAndEmpty(borrowDate)
-                || obj.isNullAndEmpty(returnDate) || obj.isNullAndEmpty(tel) || obj.isNullAndEmpty(book)) {
+                || obj.isNullAndEmpty(returnDate) || obj.isNullAndEmpty(tel)) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Fail");
             alert.setHeaderText(null);
@@ -315,49 +388,24 @@ public class BorrowController implements Initializable {
             return;
         } else {
             try (Connection conn = DatabaseConnector.getConnection()) {
-                String sqlSelect = "SELECT * FROM borrow";
-                PreparedStatement statement = conn.prepareStatement(sqlSelect);
-                ResultSet rs = statement.executeQuery();
-                id = Integer.parseInt(borrowId);
-                System.out.println(id);
-                while (rs.next()) {
-                    if (rs.getInt("borrowId") == id) {
-                        String sqlInsert = "UPDATE borrow SET name= ? ,schoolId= ? ,tel= ?,borrowDate= ?, returnDate = ?, book = ? WHERE borrowId = ? ";
-                        PreparedStatement statement2 = conn.prepareStatement(sqlInsert);
-                        statement2.setString(1, name);
-                        statement2.setString(2, schoolId);
-                        statement2.setString(3, tel);
-                        statement2.setString(4, borrowDate);
-                        statement2.setString(5, returnDate);
-                        statement2.setString(6, book);
-                        statement2.setInt(7, id);
+                String sqlInsert = "UPDATE `borrow` SET `name`=?,`schoolId`=?,`tel`=?,`borrowDate`=?,`returnDate`=? WHERE `borrowId`=?";
+                PreparedStatement statement2 = conn.prepareStatement(sqlInsert);
+                statement2.setString(1, name);
+                statement2.setString(2, schoolId);
+                statement2.setString(3, tel);
+                statement2.setString(4, borrowDate);
+                statement2.setString(5, returnDate);
+                statement2.setString(6, borrowId);
 
-                        statement2.executeUpdate();
+                statement2.executeUpdate();
 
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("Success");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Update success.");
-                        alert.showAndWait();
-                        con = false;
-
-                        borrowIdField.setText(null);
-                        nameField.setText(null);
-                        schoolIdField.setText(null);
-                        yearField.setText(null);
-                        borrowDateField.setValue(null);
-                        returnDateField.setValue(null);
-                        borrowCombo.setValue(null);
-                        showBorrows();
-                    }
-                }
-                if (con) {
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("ID not Found!");
-                    alert.showAndWait();
-                }
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Update success.");
+                alert.showAndWait();
+                showBorrows();
+                clearData(event);
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -399,7 +447,7 @@ public class BorrowController implements Initializable {
             while (resultSet.next()) {
                 borrows = new Borrow(resultSet.getString("borrowId"), resultSet.getString("name"),
                         resultSet.getString("schoolId"), resultSet.getString("tel"), resultSet.getString("borrowDate"),
-                        resultSet.getString("returnDate"), resultSet.getString("book"));
+                        resultSet.getString("returnDate"));
                 borrowList.add(borrows);
             }
         } catch (Exception e) {
@@ -417,7 +465,6 @@ public class BorrowController implements Initializable {
         telCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("tel"));
         borrowDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowDate"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("returnDate"));
-        bookCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("book"));
         tableView.setItems(list);
     }
 
@@ -451,9 +498,13 @@ public class BorrowController implements Initializable {
         nameField.setText(nameCol.getCellData(index).toString());
         schoolIdField.setText(schoolIdCol.getCellData(index).toString());
         yearField.setText(telCol.getCellData(index).toString());
+        borrowId = idCol.getCellData(index).toString();
+        showBooks();
     }
+
     @FXML
     private Button dashboardBtn;
+
     @FXML
     void handleDashboard(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/DashboardPage.fxml"));
@@ -463,5 +514,36 @@ public class BorrowController implements Initializable {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(welcomeScene);
         window.show();
+    }
+
+    public String borrowId = "";
+
+    public ObservableList<Cart> getBooks() throws SQLException {
+        String borrow = borrowId;
+        // System.out.println(borrow);
+        ObservableList<Cart> borrowList = FXCollections.observableArrayList();
+        try {
+            Connection conn = DatabaseConnector.getConnection();
+            String sql = "SELECT borrowbook.bookId, books.title FROM borrowbook join books on borrowbook.bookId = books.bookId WHERE borrowbook.borrowId = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, borrow);
+            ResultSet resultSet = statement.executeQuery();
+            Cart books;
+            while (resultSet.next()) {
+                books = new Cart(resultSet.getString("bookId"), resultSet.getString("books.title"));
+                borrowList.add(books);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return borrowList;
+
+    }
+
+    public void showBooks() throws SQLException {
+        ObservableList<Cart> list = getBooks();
+        bookIdCol.setCellValueFactory(new PropertyValueFactory<Cart, String>("bookId"));
+        bookNameCol.setCellValueFactory(new PropertyValueFactory<Cart, String>("bookName"));
+        tableBook.setItems(list);
     }
 }
