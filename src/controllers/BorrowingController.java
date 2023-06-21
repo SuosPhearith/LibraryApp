@@ -1,5 +1,6 @@
 package controllers;
 
+import java.beans.Statement;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -12,6 +13,7 @@ import config.DatabaseConnector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -81,7 +83,26 @@ public class BorrowingController implements Initializable {
     private TableColumn<Borrow, String> telCol;
 
     @FXML
-    void getItem(MouseEvent event) {
+    private TableColumn<BookList, String> bookIdCol;
+
+    @FXML
+    private TableColumn<BookList, String> bookNameCol;
+
+    @FXML
+    private TableView<BookList> bookTable;
+
+    public String borrowId = "";
+
+    @FXML
+    void getItem(MouseEvent event) throws SQLException {
+        Integer index = tableView.getSelectionModel().getSelectedIndex();
+        borrowId = idCol.getCellData(index).toString();
+        showBooks();
+    }
+
+
+    @FXML
+    void getItem2(MouseEvent event) {
 
     }
 
@@ -173,7 +194,7 @@ public class BorrowingController implements Initializable {
             while (resultSet.next()) {
                 borrows = new Borrow(resultSet.getString("borrowId"), resultSet.getString("name"),
                         resultSet.getString("schoolId"), resultSet.getString("tel"), resultSet.getString("borrowDate"),
-                        resultSet.getString("returnDate"), resultSet.getString("book"),resultSet.getString("isReturn"));
+                        resultSet.getString("returnDate"), resultSet.getString("isReturn"));
                 borrowList.add(borrows);
             }
         } catch (Exception e) {
@@ -182,6 +203,7 @@ public class BorrowingController implements Initializable {
         return borrowList;
 
     }
+
     public void showBorrows() throws SQLException {
         ObservableList<Borrow> list = getBooksList();
         idCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowId"));
@@ -190,7 +212,6 @@ public class BorrowingController implements Initializable {
         telCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("tel"));
         borrowDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowDate"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("returnDate"));
-        bookCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("book"));
         isReturnCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("isReturn"));
         tableView.setItems(list);
     }
@@ -199,11 +220,39 @@ public class BorrowingController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             showBorrows();
-            getBooksList();
+            showBooks();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public ObservableList<BookList> getBooks() throws SQLException {
+        String borrow = borrowId;
+        //System.out.println(borrow);
+        ObservableList<BookList> borrowList = FXCollections.observableArrayList();
+        try {
+            Connection conn = DatabaseConnector.getConnection();
+            String sql = "SELECT borrowbook.bookId, books.title FROM borrowbook join books on borrowbook.bookId = books.bookId WHERE borrowbook.borrowId = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, borrow);
+            ResultSet resultSet = statement.executeQuery();
+            BookList books;
+            while (resultSet.next()) {
+                books = new BookList(resultSet.getString("bookId"), resultSet.getString("title"));
+                borrowList.add(books);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return borrowList;
+
+    }
+
+    public void showBooks() throws SQLException {
+        ObservableList<BookList> list = getBooks();
+        bookIdCol.setCellValueFactory(new PropertyValueFactory<BookList, String>("bookId"));
+        bookNameCol.setCellValueFactory(new PropertyValueFactory<BookList, String>("title"));
+        bookTable.setItems(list);
+    }
 
 }

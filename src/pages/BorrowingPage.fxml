@@ -35,6 +35,11 @@
                         <Font name="System Bold" size="19.0" />
                      </font>
                   </Button>
+                  <Button layoutX="36.0" layoutY="407.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Report" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font>
+                  </Button>
                   <Text fx:id="logoutbtn" layoutX="22.0" layoutY="668.0" onMouseClicked="#logout" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
                      <font>
                         <Font size="23.0" />
@@ -48,16 +53,15 @@
                </children>
             </Pane>
             <Line endX="633.0" endY="-8.599998474121094" layoutX="430.0" layoutY="103.0" startX="-180.0" startY="-8.599998474121094" />
-            <TableView fx:id="tableView" layoutX="271.0" layoutY="113.0" onMouseClicked="#getItem" prefHeight="539.0" prefWidth="781.0">
+            <TableView fx:id="tableView" layoutX="271.0" layoutY="113.0" onMouseClicked="#getItem" prefHeight="347.0" prefWidth="781.0">
                <columns>
                   <TableColumn fx:id="idCol" prefWidth="70.39999389648438" text="ID" />
-                  <TableColumn fx:id="nameCol" prefWidth="88.80001831054688" text="Name" />
-                  <TableColumn fx:id="schoolIdCol" prefWidth="95.99996948242188" text="Student ID" />
-                  <TableColumn fx:id="telCol" prefWidth="108.0" text="Telephone" />
-                  <TableColumn fx:id="borrowDateCol" prefWidth="128.79998779296875" text="Borrow date" />
-                  <TableColumn fx:id="returnDateCol" minWidth="0.0" prefWidth="99.20001220703125" text="Return date" />
-                  <TableColumn fx:id="bookCol" minWidth="0.0" prefWidth="90.4000244140625" text="book" />
-                  <TableColumn fx:id="isReturnCol" minWidth="0.0" prefWidth="100.79998779296875" text="IsReturn" />
+                  <TableColumn fx:id="nameCol" prefWidth="108.00003051757812" text="Name" />
+                  <TableColumn fx:id="schoolIdCol" prefWidth="139.99990844726562" text="Student ID" />
+                  <TableColumn fx:id="telCol" prefWidth="115.99993896484375" text="Telephone" />
+                  <TableColumn fx:id="borrowDateCol" prefWidth="123.199951171875" text="Borrow date" />
+                  <TableColumn fx:id="returnDateCol" minWidth="0.0" prefWidth="111.199951171875" text="Return date" />
+                  <TableColumn fx:id="isReturnCol" minWidth="0.0" prefWidth="113.5999755859375" text="IsReturn" />
                </columns>
             </TableView>
             <Button fx:id="insertBtn2" layoutX="313.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleBorrow" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #1E90FF;" text="Borrow" textFill="WHITE">
@@ -75,6 +79,12 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Button>
+            <TableView fx:id="bookTable" layoutX="271.0" layoutY="474.0" onMouseClicked="#getItem2" prefHeight="200.0" prefWidth="242.0">
+              <columns>
+                <TableColumn fx:id="bookIdCol" prefWidth="70.4000244140625" text="Book ID" />
+                <TableColumn fx:id="bookNameCol" prefWidth="171.99990844726562" text="Book name" />
+              </columns>
+            </TableView>
          </children>
       </Pane>
    </children>
