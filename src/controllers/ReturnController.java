@@ -270,7 +270,7 @@ public class ReturnController implements Initializable {
             while (resultSet.next()) {
                 borrows = new Borrow(resultSet.getString("borrowId"), resultSet.getString("name"),
                         resultSet.getString("schoolId"), resultSet.getString("tel"), resultSet.getString("borrowDate"),
-                        resultSet.getString("returnDate"), resultSet.getString("book"),resultSet.getString("isReturn"));
+                        resultSet.getString("returnDate"),resultSet.getString("isReturn"));
                 borrowList.add(borrows);
             }
         } catch (Exception e) {
@@ -287,7 +287,6 @@ public class ReturnController implements Initializable {
         telCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("tel"));
         borrowDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowDate"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("returnDate"));
-        bookCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("book"));
         isReturnCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("isReturn"));
         tableView.setItems(list);
     }

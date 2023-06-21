@@ -1,6 +1,5 @@
 package controllers;
 
-import java.beans.Statement;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -25,14 +24,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderRepeat;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class DashboardController implements Initializable {
 
-    @FXML
-    private TableColumn<Borrow, String> bookCol;
 
     @FXML
     private Text bookValue;
@@ -84,6 +80,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private TableColumn<Borrow, String> telCol;
+
+    @FXML
+    private Text usernameText;
 
     @FXML
     void getItem(MouseEvent event) {
@@ -151,7 +150,7 @@ public class DashboardController implements Initializable {
             while (resultSet.next()) {
                 borrows = new Borrow(resultSet.getString("borrowId"), resultSet.getString("name"),
                         resultSet.getString("schoolId"), resultSet.getString("tel"), resultSet.getString("borrowDate"),
-                        resultSet.getString("returnDate"), resultSet.getString("book"),resultSet.getString("isReturn"));
+                        resultSet.getString("returnDate"),resultSet.getString("isReturn"));
                 borrowList.add(borrows);
             }
         } catch (Exception e) {
@@ -168,7 +167,6 @@ public class DashboardController implements Initializable {
         telCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("tel"));
         borrowDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowDate"));
         returnDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("returnDate"));
-        bookCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("book"));
         isReturnCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("isReturn"));
         tableView.setItems(list);
 
@@ -204,6 +202,8 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            Username username = new Username();
+            usernameText.setText(username.getUsername());
             showBorrows();
             getBooksList();
         } catch (SQLException e) {
