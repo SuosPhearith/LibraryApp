@@ -33,7 +33,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.sql.Statement;
+<<<<<<< HEAD
 import java.time.LocalDate;
+=======
+>>>>>>> 18160a676f133523662410304ecef5b6be2fff28
 
 public class BorrowController implements Initializable {
 
@@ -154,7 +157,10 @@ public class BorrowController implements Initializable {
         yearField.setText(null);
         returnDateField.setValue(null);
         borrowCombo.setValue(null);
+<<<<<<< HEAD
         tableBook.setItems(null);
+=======
+>>>>>>> 18160a676f133523662410304ecef5b6be2fff28
         carts.clear();
 
     }
@@ -256,6 +262,7 @@ public class BorrowController implements Initializable {
         String name = nameField.getText();
         String schoolId = schoolIdField.getText();
         String tel = yearField.getText();
+<<<<<<< HEAD
         // String borrowDate = borrowDateField.getValue().toString();
         LocalDate now = LocalDate.now();
         String borrowDate = now.toString();
@@ -289,6 +296,10 @@ public class BorrowController implements Initializable {
             alert.showAndWait();
             return;
         }
+=======
+        String borrowDate = borrowDateField.getValue().toString();
+        String returnDate = returnDateField.getValue().toString();
+>>>>>>> 18160a676f133523662410304ecef5b6be2fff28
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
         if (obj.isNullAndEmpty(schoolId)) {
@@ -404,6 +415,7 @@ public class BorrowController implements Initializable {
         String name = nameField.getText();
         String schoolId = schoolIdField.getText();
         String tel = yearField.getText();
+<<<<<<< HEAD
         String returnDate = "";
         if (returnDateField.getValue() != null) {
             returnDate = returnDateField.getValue().toString();
@@ -411,6 +423,13 @@ public class BorrowController implements Initializable {
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
         if (obj.isNullAndEmpty(name) || obj.isNullAndEmpty(schoolId)
+=======
+        String borrowDate = borrowDateField.getValue().toString();
+        String returnDate = returnDateField.getValue().toString();
+
+        IsNullAndEmpty obj = new IsNullAndEmpty();
+        if (obj.isNullAndEmpty(name) || obj.isNullAndEmpty(schoolId) || obj.isNullAndEmpty(borrowDate)
+>>>>>>> 18160a676f133523662410304ecef5b6be2fff28
                 || obj.isNullAndEmpty(returnDate) || obj.isNullAndEmpty(tel)) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("Fail");
@@ -420,13 +439,23 @@ public class BorrowController implements Initializable {
             return;
         } else {
             try (Connection conn = DatabaseConnector.getConnection()) {
+<<<<<<< HEAD
                 String sqlInsert = "UPDATE `borrow` SET `name`=?,`schoolId`=?,`tel`=?,`returnDate`=? WHERE `borrowId`=?";
+=======
+                String sqlInsert = "UPDATE `borrow` SET `name`=?,`schoolId`=?,`tel`=?,`borrowDate`=?,`returnDate`=? WHERE `borrowId`=?";
+>>>>>>> 18160a676f133523662410304ecef5b6be2fff28
                 PreparedStatement statement2 = conn.prepareStatement(sqlInsert);
                 statement2.setString(1, name);
                 statement2.setString(2, schoolId);
                 statement2.setString(3, tel);
+<<<<<<< HEAD
                 statement2.setString(4, returnDate);
                 statement2.setString(5, borrowId);
+=======
+                statement2.setString(4, borrowDate);
+                statement2.setString(5, returnDate);
+                statement2.setString(6, borrowId);
+>>>>>>> 18160a676f133523662410304ecef5b6be2fff28
 
                 statement2.executeUpdate();
 
@@ -577,6 +606,7 @@ public class BorrowController implements Initializable {
         bookNameCol.setCellValueFactory(new PropertyValueFactory<Cart, String>("bookName"));
         tableBook.setItems(list);
     }
+<<<<<<< HEAD
 
     public boolean canReturnOn(LocalDate returnDate) {
         LocalDate now = LocalDate.now();
@@ -586,4 +616,6 @@ public class BorrowController implements Initializable {
             return false;
         }
     }
+=======
+>>>>>>> 18160a676f133523662410304ecef5b6be2fff28
 }
