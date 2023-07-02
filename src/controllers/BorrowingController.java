@@ -1,19 +1,18 @@
 package controllers;
 
-import java.beans.Statement;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import config.DatabaseConnector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,6 +29,26 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class BorrowingController implements Initializable {
+    @FXML
+    private TableColumn<Borrow, String> lBorrowDateCol;
+
+    @FXML
+    private TableColumn<Borrow, String> lIdCol;
+
+    @FXML
+    private TableColumn<Borrow, String> lNameCol;
+
+    @FXML
+    private TableColumn<Borrow, String> lReturnDateCol;
+
+    @FXML
+    private TableColumn<Borrow, String> lStudentIdcol;
+
+    @FXML
+    private TableColumn<Borrow, String> lTelephoneCol;
+
+    @FXML
+    private TableView<Borrow> tableLate;
 
     @FXML
     private TableColumn<Borrow, String> bookCol;
@@ -201,6 +220,34 @@ public class BorrowingController implements Initializable {
             e.printStackTrace();
         }
         return borrowList;
+    }
+
+
+    public ObservableList<Borrow> getBooksListLate() throws SQLException {
+        ObservableList<Borrow> borrowList = FXCollections.observableArrayList();
+        LocalDate now = LocalDate.now();
+        try {
+            Connection conn = DatabaseConnector.getConnection();
+            String sql = "SELECT * FROM borrow WHERE isReturn = 'NoReturn' and returnDate <'" +now+"'";
+            // Search Function
+            String search = searchField.getText();
+            if (search != "") {
+                sql += " AND name LIKE '%" + search + "%'";
+            }
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            Borrow borrows;
+            while (resultSet.next()) {
+                borrows = new Borrow(resultSet.getString("borrowId"), resultSet.getString("name"),
+                        resultSet.getString("schoolId"), resultSet.getString("tel"), resultSet.getString("borrowDate"),
+                        resultSet.getString("returnDate"), resultSet.getString("isReturn"));
+                borrowList.add(borrows);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return borrowList;
 
     }
 
@@ -216,9 +263,21 @@ public class BorrowingController implements Initializable {
         tableView.setItems(list);
     }
 
+    public void showBorrowsLate() throws SQLException {
+        ObservableList<Borrow> listLate = getBooksListLate();
+        lIdCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowId"));
+        lNameCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("name"));
+        lStudentIdcol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("schoolId"));
+        lTelephoneCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("tel"));
+        lBorrowDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowDate"));
+        lReturnDateCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("returnDate"));
+        tableLate.setItems(listLate);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+            showBorrowsLate();
             showBorrows();
             showBooks();
         } catch (SQLException e) {
@@ -247,12 +306,46 @@ public class BorrowingController implements Initializable {
         return borrowList;
 
     }
+    public ObservableList<BookList> getBooksLate() throws SQLException {
+        String borrow = borrowId;
+        //System.out.println(borrow);
+        ObservableList<BookList> borrowList = FXCollections.observableArrayList();
+        try {
+            Connection conn = DatabaseConnector.getConnection();
+            String sql = "SELECT borrowbook.bookId, books.title FROM borrowbook join books on borrowbook.bookId = books.bookId WHERE borrowbook.borrowId = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, borrow);
+            ResultSet resultSet = statement.executeQuery();
+            BookList books;
+            while (resultSet.next()) {
+                books = new BookList(resultSet.getString("bookId"), resultSet.getString("title"));
+                borrowList.add(books);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return borrowList;
+
+    }
 
     public void showBooks() throws SQLException {
         ObservableList<BookList> list = getBooks();
         bookIdCol.setCellValueFactory(new PropertyValueFactory<BookList, String>("bookId"));
         bookNameCol.setCellValueFactory(new PropertyValueFactory<BookList, String>("title"));
         bookTable.setItems(list);
+    }
+    public void showBooksLate() throws SQLException {
+        ObservableList<BookList> list = getBooksLate();
+        bookIdCol.setCellValueFactory(new PropertyValueFactory<BookList, String>("bookId"));
+        bookNameCol.setCellValueFactory(new PropertyValueFactory<BookList, String>("title"));
+        bookTable.setItems(list);
+    }
+
+    @FXML
+    void lGetItem(MouseEvent event) throws SQLException {
+        Integer index = tableLate.getSelectionModel().getSelectedIndex();
+        borrowId = idCol.getCellData(index).toString();
+        showBooksLate();
     }
 
 }

@@ -7,34 +7,24 @@ public class Borrow {
     private String tel;
     private String borrowDate;
     private String returnDate;
-    private String book;
+    public Borrow(String borrowId, String name, String schoolId, String tel, String borrowDate, String returnDate) {
+        this.borrowId = borrowId;
+        this.name = name;
+        this.schoolId = schoolId;
+        this.tel = tel;
+        this.borrowDate = borrowDate;
+        this.returnDate = returnDate;
+    }
     private String isReturn;
-    public String getIsReturn() {
-        return isReturn;
-    }
-    public void setIsReturn(String isReturn) {
-        this.isReturn = isReturn;
-    }
     public Borrow(String borrowId, String name, String schoolId, String tel, String borrowDate, String returnDate,
-            String book, String isReturn) {
+            String isReturn) {
         this.borrowId = borrowId;
         this.name = name;
         this.schoolId = schoolId;
         this.tel = tel;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
-        this.book = book;
         this.isReturn = isReturn;
-    }
-    public Borrow(String borrowId, String name, String schoolId, String tel, String borrowDate, String returnDate,
-            String book) {
-        this.borrowId = borrowId;
-        this.name = name;
-        this.schoolId = schoolId;
-        this.tel = tel;
-        this.borrowDate = borrowDate;
-        this.returnDate = returnDate;
-        this.book = book;
     }
     public String getBorrowId() {
         return borrowId;
@@ -72,10 +62,10 @@ public class Borrow {
     public void setReturnDate(String returnDate) {
         this.returnDate = returnDate;
     }
-    public String getBook() {
-        return book;
+    public String getIsReturn() {
+        return isReturn;
     }
-    public void setBook(String book) {
-        this.book = book;
+    public void setIsReturn(String isReturn) {
+        this.isReturn = isReturn;
     }
 }

@@ -101,8 +101,32 @@ public class ReturnController implements Initializable {
     @FXML
     void doReturn(ActionEvent event) {
         String bookId = idField.getText();
-        int id;
-        String isReturn = selectCombo.getSelectionModel().getSelectedItem().toString();
+        int id = 9999;
+
+        try {
+            id = Integer.parseInt(bookId);
+            System.out.println("The value is an integer.");
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Fail");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid ID!!.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (bookId == "" || bookId == null) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Fail");
+            alert.setHeaderText(null);
+            alert.setContentText("Please input ID!!.");
+            alert.showAndWait();
+            return;
+        }
+        String isReturn = null;
+        if (selectCombo.getSelectionModel().getSelectedItem() != null) {
+            isReturn = selectCombo.getSelectionModel().getSelectedItem().toString();
+        }
         boolean con = true;
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
@@ -118,7 +142,6 @@ public class ReturnController implements Initializable {
                 String sqlSelect = "SELECT * FROM borrow";
                 PreparedStatement statement = conn.prepareStatement(sqlSelect);
                 ResultSet rs = statement.executeQuery();
-                id = Integer.parseInt(bookId);
                 while (rs.next()) {
                     if (rs.getInt("borrowId") == id) {
                         String sqlInsert = "UPDATE borrow SET isReturn= ? WHERE borrowId= ? ";
@@ -244,8 +267,8 @@ public class ReturnController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<String> list = FXCollections.observableArrayList("Return","NoReturn");
-            selectCombo.setItems(list);
+        ObservableList<String> list = FXCollections.observableArrayList("Return", "NoReturn");
+        selectCombo.setItems(list);
         try {
             showBorrows();
             getBooksList();
@@ -253,6 +276,7 @@ public class ReturnController implements Initializable {
             e.printStackTrace();
         }
     }
+
     public ObservableList<Borrow> getBooksList() throws SQLException {
         ObservableList<Borrow> borrowList = FXCollections.observableArrayList();
         try {
@@ -270,7 +294,7 @@ public class ReturnController implements Initializable {
             while (resultSet.next()) {
                 borrows = new Borrow(resultSet.getString("borrowId"), resultSet.getString("name"),
                         resultSet.getString("schoolId"), resultSet.getString("tel"), resultSet.getString("borrowDate"),
-                        resultSet.getString("returnDate"),resultSet.getString("isReturn"));
+                        resultSet.getString("returnDate"), resultSet.getString("isReturn"));
                 borrowList.add(borrows);
             }
         } catch (Exception e) {
@@ -279,6 +303,7 @@ public class ReturnController implements Initializable {
         return borrowList;
 
     }
+
     public void showBorrows() throws SQLException {
         ObservableList<Borrow> list = getBooksList();
         idCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("borrowId"));
@@ -290,6 +315,5 @@ public class ReturnController implements Initializable {
         isReturnCol.setCellValueFactory(new PropertyValueFactory<Borrow, String>("isReturn"));
         tableView.setItems(list);
     }
-
 
 }

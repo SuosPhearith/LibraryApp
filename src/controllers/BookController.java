@@ -196,7 +196,10 @@ public class BookController implements Initializable {
         String author = authorField.getText();
         String year = yearField.getText();
         String page = pageField.getText();
-        String category = categoryCambo.getSelectionModel().getSelectedItem().toString();
+        String category = null;
+        if (categoryCambo.getSelectionModel().getSelectedItem() != null) {
+            category = categoryCambo.getSelectionModel().getSelectedItem().toString();
+        }
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
         if (obj.isNullAndEmpty(title) || obj.isNullAndEmpty(author) || obj.isNullAndEmpty(page)
@@ -284,7 +287,10 @@ public class BookController implements Initializable {
         String author = authorField.getText();
         String year = yearField.getText();
         String page = pageField.getText();
-        String category = categoryCambo.getSelectionModel().getSelectedItem().toString();
+        String category = null;
+        if (categoryCambo.getSelectionModel().getSelectedItem() != null) {
+            category = categoryCambo.getSelectionModel().getSelectedItem().toString();
+        }
         boolean con = true;
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
@@ -353,6 +359,14 @@ public class BookController implements Initializable {
     @FXML
     void deleteBook(ActionEvent event) {
         String bookId = idField.getText();
+        if (bookId == "" || bookId == null) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Fail delete!");
+            alert.setHeaderText(null);
+            alert.setContentText("Please input ID for delete!");
+            alert.showAndWait();
+            return;
+        }
         int id = Integer.parseInt(bookId);
         try (Connection conn = DatabaseConnector.getConnection()) {
             String sql = "DELETE FROM books WHERE bookId=?";
@@ -405,10 +419,10 @@ public class BookController implements Initializable {
             String sql = "SELECT * FROM books";
             // Search Function
             String search = searchField.getText();
-            if(search!=""){
-                sql += " WHERE title LIKE '%" +search+ "%'";
+            if (search != "") {
+                sql += " WHERE title LIKE '%" + search + "%'";
             }
-            
+
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             Books books;
@@ -455,13 +469,15 @@ public class BookController implements Initializable {
         // System.out.println(categoryList);
         return categoryList;
     }
-    
+
     @FXML
     void handleSearch(ActionEvent event) throws SQLException {
         showBooks();
     }
+
     @FXML
     private Button borrowBtn;
+
     @FXML
     void handleBorrow(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowPage.fxml"));

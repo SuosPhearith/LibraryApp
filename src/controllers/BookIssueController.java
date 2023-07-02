@@ -31,7 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class BookIssueController implements Initializable{
+public class BookIssueController implements Initializable {
 
     @FXML
     private TableColumn<BookIssue, String> authorCol;
@@ -91,6 +91,9 @@ public class BookIssueController implements Initializable{
     private TableColumn<BookIssue, String> yearCol;
 
     @FXML
+    private Button borrowBtn;
+
+    @FXML
     void autoGenerate(MouseEvent event) {
 
     }
@@ -111,7 +114,7 @@ public class BookIssueController implements Initializable{
                 selectCombo.setValue(selectCombo.getItems().get(i));
             }
         }
-    
+
     }
 
     @FXML
@@ -128,6 +131,17 @@ public class BookIssueController implements Initializable{
     @FXML
     void handleBookIssues(ActionEvent event) {
 
+    }
+
+    @FXML
+    void handleBorrow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowPage.fxml"));
+        Parent welcomeParent = loader.load();
+        Scene welcomeScene = new Scene(welcomeParent);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(welcomeScene);
+        window.show();
     }
 
     @FXML
@@ -164,17 +178,6 @@ public class BookIssueController implements Initializable{
     }
 
     @FXML
-    void handleBorrow(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowPage.fxml"));
-        Parent welcomeParent = loader.load();
-        Scene welcomeScene = new Scene(welcomeParent);
-
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(welcomeScene);
-        window.show();
-    }
-
-    @FXML
     void linkToBookPage(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BookPage.fxml"));
         Parent welcomeParent = loader.load();
@@ -188,8 +191,31 @@ public class BookIssueController implements Initializable{
     @FXML
     void updateBook(ActionEvent event) {
         String bookId = idField.getText();
-        int id;
-        String isActive = selectCombo.getSelectionModel().getSelectedItem().toString();
+        int id = 9999;
+        try {
+            id = Integer.parseInt(bookId);
+            System.out.println("The value is an integer.");
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Fail");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid ID!!.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (bookId == "" || bookId == null) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Fail update!");
+            alert.setHeaderText(null);
+            alert.setContentText("Please input ID!");
+            alert.showAndWait();
+            return;
+        }
+        String isActive = null;
+        if (selectCombo.getSelectionModel().getSelectedItem() != null) {
+            isActive = selectCombo.getSelectionModel().getSelectedItem().toString();
+        }
         boolean con = true;
 
         IsNullAndEmpty obj = new IsNullAndEmpty();
@@ -245,6 +271,7 @@ public class BookIssueController implements Initializable{
 
         }
     }
+
     @FXML
     void handleSearch(ActionEvent event) throws SQLException {
         showBooks();
@@ -252,8 +279,8 @@ public class BookIssueController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-            ObservableList<String> list = FXCollections.observableArrayList("Active","Disable");
-            selectCombo.setItems(list);
+        ObservableList<String> list = FXCollections.observableArrayList("Active", "Disable");
+        selectCombo.setItems(list);
         try {
             showBooks();
         } catch (SQLException e) {
@@ -261,6 +288,7 @@ public class BookIssueController implements Initializable{
         }
 
     }
+
     public ObservableList<BookIssue> getBooksList() throws SQLException {
         ObservableList<BookIssue> bookList = FXCollections.observableArrayList();
         try {
@@ -268,17 +296,17 @@ public class BookIssueController implements Initializable{
             String sql = "SELECT * FROM books";
             // Search Function
             String search = searchField.getText();
-            if(search!=""){
-                sql += " WHERE title LIKE '%" +search+ "%'";
+            if (search != "") {
+                sql += " WHERE title LIKE '%" + search + "%'";
             }
-            
+
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             BookIssue books;
             while (resultSet.next()) {
                 books = new BookIssue(resultSet.getString("bookId"), resultSet.getString("title"),
                         resultSet.getString("author"), resultSet.getString("year"), resultSet.getString("pages"),
-                        resultSet.getString("category"),resultSet.getString("isActive"));
+                        resultSet.getString("category"), resultSet.getString("isActive"));
                 bookList.add(books);
             }
         } catch (Exception e) {

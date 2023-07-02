@@ -63,6 +63,9 @@ public class Books {
         return bookId + "-"+ title;
         
     }
+    public String[] split(String string) {
+        return null;
+    }
     
     
 }

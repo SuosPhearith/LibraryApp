@@ -3,31 +3,49 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LoginController">
    <children>
-      <Pane layoutX="303.0" layoutY="103.0" prefHeight="396.0" prefWidth="297.0" style="-fx-background-color: E2C9C9; -fx-border-radius: 20 20 20 20; -fx-background-radius: 10 10 10 10;">
+      <Pane prefHeight="600.0" prefWidth="359.0" style="-fx-background-color: #1B3358;">
          <children>
-            <Text fill="#001253" layoutX="54.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" x="63.0" y="25.0">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-            </Text>
-            <TextField fx:id="loginUsername" layoutX="23.0" layoutY="93.0" prefHeight="40.0" prefWidth="252.0" promptText="  Username" style="-fx-border-radius: 20 20 20 20; -fx-background-radius: 20 20 20 20; -fx-background-color: D9D9D9; -fx-font: black;" />
-            <Button fx:id="loginbtn" layoutX="23.0" layoutY="216.0" mnemonicParsing="false" onAction="#doLogin" prefHeight="40.0" prefWidth="252.0" style="-fx-background-color: EE9494; -fx-border-radius: 20 20 20 20; -fx-background-radius: 20 20 20 20;" text="Login" textFill="WHITE">
+            <TextField fx:id="loginUsername" layoutX="23.0" layoutY="280.0" prefHeight="40.0" prefWidth="313.0" promptText="  Username" style="-fx-background-radius: 10; -fx-background-color: D9D9D9;" />
+            <PasswordField fx:id="loginPassword" layoutX="21.0" layoutY="350.0" prefHeight="40.0" prefWidth="313.0" promptText="Password" style="-fx-background-radius: 10; -fx-background-color: D9D9D9;" />
+            <Button fx:id="loginbtn" layoutX="21.0" layoutY="424.0" mnemonicParsing="false" onAction="#doLogin" prefHeight="40.0" prefWidth="313.0" style="-fx-background-color: #473E66; -fx-background-radius: 10;" text="Login" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Button>
-            <Text fx:id="signUpbtn" fill="#001253" layoutX="61.0" layoutY="333.0" onMouseClicked="#handleSignUp" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign up" x="63.0" y="25.0">
+            <Text fx:id="signUpbtn" fill="WHITE" layoutX="84.0" layoutY="550.0" onMouseClicked="#handleSignUp" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign up" x="63.0" y="25.0">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Text>
-            <PasswordField fx:id="loginPassword" layoutX="23.0" layoutY="153.0" prefHeight="40.0" prefWidth="252.0" promptText="Password" style="-fx-background-radius: 20 20 20 20; -fx-background-color: D9D9D9;" />
-         </children></Pane>
+            <ImageView fitHeight="121.0" fitWidth="121.0" layoutX="110.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/book%20(1).png" />
+               </image>
+            </ImageView>
+            <Text fill="WHITE" layoutX="118.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+               <font>
+                  <Font name="System Bold" size="41.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <ImageView fitHeight="330.0" fitWidth="302.0" layoutX="490.0" layoutY="146.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/4-2-cartoon-transparent.png" />
+         </image>
+      </ImageView>
+      <Text fill="#9e3737" layoutX="404.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the library">
+         <font>
+            <Font name="System Bold" size="41.0" />
+         </font>
+      </Text>
    </children>
 </Pane>

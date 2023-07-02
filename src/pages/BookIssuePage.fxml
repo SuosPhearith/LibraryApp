@@ -12,36 +12,36 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BookIssueController">
    <children>
-      <Pane layoutX="9.0" layoutY="7.0" prefHeight="686.0" prefWidth="1063.0" style="-fx-background-radius: 12 12 12 12; -fx-background-color: grey;">
+      <Pane layoutX="9.0" layoutY="7.0" prefHeight="686.0" prefWidth="1063.0" style="-fx-background-radius: 12 12 12 12; -fx-background-color: #f5d7db;">
          <children>
-            <Pane prefHeight="686.0" prefWidth="250.0" style="-fx-background-radius: 12 12 12 12; -fx-background-color: EE9494;">
+            <Pane prefHeight="686.0" prefWidth="250.0" style="-fx-background-color: #473e66;">
                <children>
-                  <TextField fx:id="searchField" layoutX="15.0" layoutY="31.0" prefHeight="41.0" prefWidth="130.0" promptText="Search book" style="-fx-background-radius: 15 15 15 15;">
+                  <TextField fx:id="searchField" layoutX="15.0" layoutY="31.0" prefHeight="41.0" prefWidth="130.0" promptText="Search" style="-fx-background-radius: 10;">
                      <font>
                         <Font size="17.0" />
                      </font>
                   </TextField>
-                  <Button fx:id="dashboardbtn" layoutX="36.0" layoutY="148.0" mnemonicParsing="false" onAction="#linkDashboard" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Dashboard" textFill="WHITE">
+                  <Button fx:id="dashboardbtn" layoutX="36.0" layoutY="148.0" mnemonicParsing="false" onAction="#linkDashboard" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 10; -fx-background-color: #bd83b8;" text="Dashboard">
                      <font>
                         <Font name="System Bold" size="19.0" />
                      </font>
                   </Button>
-                  <Button fx:id="bookstbn" layoutX="36.0" layoutY="235.0" mnemonicParsing="false" onAction="#linkToBookPage" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Books">
+                  <Button fx:id="bookstbn" layoutX="36.0" layoutY="235.0" mnemonicParsing="false" onAction="#linkToBookPage" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 10; -fx-background-color: #f1916d;" text="Books">
                      <font>
                         <Font name="System Bold" size="19.0" />
                      </font>
                   </Button>
-                  <Button fx:id="borrowBtn" layoutX="36.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleBorrow" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 30 30 30 30; -fx-background-color: brown;" text="Borrow" textFill="WHITE">
+                  <Button fx:id="borrowBtn" layoutX="36.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleBorrow" prefHeight="59.0" prefWidth="178.0" style="-fx-background-radius: 10; -fx-background-color: #bd83b8;" text="Borrow">
                      <font>
                         <Font name="System Bold" size="19.0" />
                      </font>
                   </Button>
-                  <Text fx:id="logoutbtn" layoutX="22.0" layoutY="668.0" onMouseClicked="#handleLogout" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
+                  <Text fx:id="logoutbtn" fill="WHITE" layoutX="22.0" layoutY="668.0" onMouseClicked="#handleLogout" strokeType="OUTSIDE" strokeWidth="0.0" text="Logout">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </Text>
-                  <Button fx:id="searchBtn" layoutX="152.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 20 20 20 20; -fx-background-color: #1E90FF;" text="Search" textFill="WHITE">
+                  <Button fx:id="searchBtn" layoutX="152.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="41.0" prefWidth="84.0" style="-fx-background-radius: 10; -fx-background-color: #1b3358;" text="Search" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>

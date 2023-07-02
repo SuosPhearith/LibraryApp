@@ -70,6 +70,9 @@ public class CategoryController implements Initializable {
     private Button insertBtn;
 
     @FXML
+    private Button borrowBtn;
+
+    @FXML
     private Text logoutbtn;
 
     @FXML
@@ -114,6 +117,14 @@ public class CategoryController implements Initializable {
     @FXML
     void deleteBook(ActionEvent event) {
         String categoryId = idField.getText();
+        if (categoryId == "" || categoryId == null) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Fail delete!");
+            alert.setHeaderText(null);
+            alert.setContentText("Please input ID for delete!");
+            alert.showAndWait();
+            return;
+        }
         int id = Integer.parseInt(categoryId);
         try (Connection conn = DatabaseConnector.getConnection()) {
             String sql = "DELETE FROM category WHERE categoryId=?";
@@ -187,6 +198,17 @@ public class CategoryController implements Initializable {
     @FXML
     void handleLogout(MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/LoginPage.fxml"));
+        Parent welcomeParent = loader.load();
+        Scene welcomeScene = new Scene(welcomeParent);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(welcomeScene);
+        window.show();
+    }
+
+    @FXML
+    void handleBorrow(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowPage.fxml"));
         Parent welcomeParent = loader.load();
         Scene welcomeScene = new Scene(welcomeParent);
 
@@ -270,17 +292,6 @@ public class CategoryController implements Initializable {
     }
 
     @FXML
-    void handleBorrow(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/BorrowPage.fxml"));
-        Parent welcomeParent = loader.load();
-        Scene welcomeScene = new Scene(welcomeParent);
-
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(welcomeScene);
-        window.show();
-    }
-
-    @FXML
     void updateBook(ActionEvent event) {
         String categoryId = idField.getText();
         int id;
@@ -354,22 +365,24 @@ public class CategoryController implements Initializable {
             e.printStackTrace();
         }
     }
+
     public ObservableList<Category> getCategoryList() throws SQLException {
         ObservableList<Category> categoryList = FXCollections.observableArrayList();
         try {
             Connection conn = DatabaseConnector.getConnection();
             String sql = "SELECT * FROM category";
-            //Search Function
+            // Search Function
             String search = searchField.getText();
-            if(search!=""){
-                sql += " WHERE catName LIKE '%" +search+ "%'";
+            if (search != "") {
+                sql += " WHERE catName LIKE '%" + search + "%'";
             }
-            
+
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             Category category;
             while (resultSet.next()) {
-                category = new Category(resultSet.getString("categoryId"), resultSet.getString("catName"),resultSet.getString("catInfo"));
+                category = new Category(resultSet.getString("categoryId"), resultSet.getString("catName"),
+                        resultSet.getString("catInfo"));
                 categoryList.add(category);
             }
         } catch (Exception e) {
@@ -391,6 +404,5 @@ public class CategoryController implements Initializable {
     void handleSearch(ActionEvent event) throws SQLException {
         showCategory();
     }
-
 
 }

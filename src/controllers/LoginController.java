@@ -56,6 +56,8 @@ public class LoginController {
             alert.showAndWait();
         }else{
             if(db.loginUser(username, password)){
+                Username username3 = new Username();
+                username3.setUsername(username);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/pages/DashboardPage.fxml"));
                 Parent welcomeParent = loader.load();
                 Scene welcomeScene = new Scene(welcomeParent);
